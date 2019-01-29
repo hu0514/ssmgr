@@ -1,0 +1,21 @@
+version: '3'
+services:
+        shadowsocks-libev:
+                image: vimagick/shadowsocks-libev
+                container_name: shadowsocks-libev
+                hostname: shadowsocks-libev
+                restart: always
+                command: ss-manager -m aes-256-cfb -u --manager-address 127.0.0.1:8388
+                network_mode: "host"
+        ssmgr-s:
+                image: gyteng/ssmgr
+                container_name: ssmgr-s
+                hostname: ssmgr-s
+                restart: always
+                depends_on:
+                 - shadowsocks-libev
+                volumes:
+                 - /data/ssmgr/webgui.yml:/tmp/webgui.yml
+                command: ssmgr -t s -s 127.0.0.1:8388 -m 0.0.0.0:8400 -p 12345678
+                network_mode: "host"
+                
